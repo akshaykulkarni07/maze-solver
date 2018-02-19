@@ -5,6 +5,8 @@ int d = 0;
 int e = 0;
 int f = 0;
 
+int spd1 = 160;
+
 void setup() 
 {
   // Motors
@@ -31,21 +33,21 @@ void loop()
   read_ir();
   
   // straight lines
-  if (a == 1 && b == 1 && c == 0 && d == 0 && e == 1 && f == 1)
+  if (a == 1 && b == 0 && c == 0 && d == 0 && e == 0 && f == 1)
   {
-    forward(100);
+    forward(spd1);
     read_ir();
   }
   // curved left turns
   else if (a == 0 && (b == 0 || b == 1) && c == 1 && d == 1 && e == 1 && f == 1)
   {
-    left(100);
+    left(spd1);
     read_ir();
   }
   // curved right turns
   else if (a == 1 && b == 1 && c == 1 && d == 1 && (e == 0 || e == 1) && f == 0)
   {
-    right(100);
+    right(spd1);
     read_ir();
   }
   // 90 degree left turns
@@ -57,7 +59,7 @@ void loop()
   	read_ir();
   	while(a != 0 || b != 0)
   	{
-  		left(100);
+  		left(spd1);
   		read_ir();
   	}
   }
@@ -70,16 +72,16 @@ void loop()
   	read_ir();
   	while(e != 0 || f != 0)
   	{
-  		right(100);
+  		right(spd1);
   		read_ir();
   	}
   }
   // any other case i.e. lost line
-  else
+  /* else
   {
     reverse(100);
     read_ir();
-  }
+  }*/
 }
 
 void forward(int spd)
