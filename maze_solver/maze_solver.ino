@@ -7,7 +7,7 @@ int f = 0;
 
 int spd1 = 160;
 
-void setup() 
+void setup()
 {
   // Motors
   pinMode(2, OUTPUT);
@@ -15,15 +15,7 @@ void setup()
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
 
-  // IR sensors
-  pinMode(22, INPUT);
-  pinMode(23, INPUT);
-  pinMode(24, INPUT);
-  pinMode(25, INPUT);
-  pinMode(26, INPUT);
-  pinMode(27, INPUT);
-
-  // Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop() 
@@ -31,57 +23,19 @@ void loop()
   // 0 i/p for white
   // 1 i/p for black
   read_ir();
-  
-  // straight lines
-  if (a == 1 && b == 0 && c == 0 && d == 0 && e == 0 && f == 1)
-  {
-    forward(spd1);
-    read_ir();
-  }
-  // curved left turns
-  else if (a == 0 && (b == 0 || b == 1) && c == 1 && d == 1 && e == 1 && f == 1)
-  {
-    left(spd1);
-    read_ir();
-  }
-  // curved right turns
-  else if (a == 1 && b == 1 && c == 1 && d == 1 && (e == 0 || e == 1) && f == 0)
-  {
-    right(spd1);
-    read_ir();
-  }
-  // 90 degree left turns
-  else if (a == 0 && b == 0 && c == 0 && d == 0 && e == 1 && f == 1)
-  {
-  	forward(100);
-  	// delay needs to be adjusted
-  	delay(300);
-  	read_ir();
-  	while(a != 0 || b != 0)
-  	{
-  		left(spd1);
-  		read_ir();
-  	}
-  }
-  // 90 degree right turns
-  else if (a == 1 && b == 1 && c == 0 && d == 0 && e == 0 && f == 0)
-  {
-  	forward(100);
-  	// delay needs to be adjusted
-  	delay(300);
-  	read_ir();
-  	while(e != 0 || f != 0)
-  	{
-  		right(spd1);
-  		read_ir();
-  	}
-  }
-  // any other case i.e. lost line
-  /* else
-  {
-    reverse(100);
-    read_ir();
-  }*/
+
+  Serial.print("a = ");
+  Serial.println(a);
+  Serial.print("b = ");
+  Serial.println(b);
+  Serial.print("c = ");
+  Serial.println(c);
+  Serial.print("d = ");
+  Serial.println(d);
+  Serial.print("e = ");
+  Serial.println(e);
+  Serial.print("f = ");
+  Serial.println(f);
 }
 
 void forward(int spd)
@@ -127,11 +81,11 @@ void stop_motors()
 void read_ir()
 {
   // read IR input
-  a = digitalRead(22);
-  b = digitalRead(23);
-  c = digitalRead(24);
-  d = digitalRead(25);
-  e = digitalRead(26);
-  f = digitalRead(27);
+  a = analogRead(A8);
+  b = analogRead(A9);
+  c = analogRead(A10);
+  d = analogRead(A11);
+  e = analogRead(A12);
+  f = analogRead(A13);
 }
 
