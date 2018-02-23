@@ -6,6 +6,10 @@ int e = 0;
 int f = 0;
 
 int spd1 = 160;
+double prev_err = 0, integral = 0, derivative = 0;
+double kp = 5, ki = 0, kd = 0;
+double tm = 0, prev_tm = 0;
+
 
 void setup()
 {
@@ -15,27 +19,46 @@ void setup()
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
 
-  Serial.begin(9600);
+  pinMode(22, INPUT);
+  pinMode(23, INPUT);
+  pinMode(24, INPUT);
+  pinMode(25, INPUT);
+  pinMode(26, INPUT);
+  pinMode(27, INPUT);
+  
+  // Serial.begin(9600);
+  forward(spd1);
 }
 
 void loop() 
 {
+  read_ir();
   // 0 i/p for white
   // 1 i/p for black
-  read_ir();
-
-  Serial.print("a = ");
-  Serial.println(a);
-  Serial.print("b = ");
-  Serial.println(b);
-  Serial.print("c = ");
-  Serial.println(c);
-  Serial.print("d = ");
-  Serial.println(d);
-  Serial.print("e = ");
-  Serial.println(e);
-  Serial.print("f = ");
-  Serial.println(f);
+  // straight lines
+  if (a == 0 && b == 1 && c == 1 && d == 1 && e == 1 && f == 0)
+  {
+    forward(spd1);
+    read_ir();
+  }
+  // curved right turns
+  else if (a == 0 && b == 1 && c == 1 && d == 1 && e == 0 && f == 0)
+  {
+    right(spd1);
+    read_ir();
+  }
+  // curved left turns
+  else if (a == 0 && b == 0 && c == 1 && d == 1 && e == 1 && f == 0)
+  {
+    left(spd1);
+    read_ir();
+  }
+  // otherwise stop
+  else
+  {
+    stop_motors();
+    read_ir();
+  }
 }
 
 void forward(int spd)
@@ -54,7 +77,7 @@ void reverse(int spd)
   analogWrite(5, spd);
 }
 
-void left(int spd)
+void right(int spd)
 {
   analogWrite(2, 0);
   analogWrite(3, spd);
@@ -62,7 +85,7 @@ void left(int spd)
   analogWrite(5, 0);
 }
 
-void right(int spd)
+void left(int spd)
 {
   analogWrite(2, spd);
   analogWrite(3, 0);
@@ -81,11 +104,38 @@ void stop_motors()
 void read_ir()
 {
   // read IR input
-  a = analogRead(A8);
-  b = analogRead(A9);
-  c = analogRead(A10);
-  d = analogRead(A11);
-  e = analogRead(A12);
-  f = analogRead(A13);
+  a = digitalRead(22);
+  b = digitalRead(23);
+  c = digitalRead(24);
+  d = digitalRead(25);
+  e = digitalRead(26);
+  f = digitalRead(27);
 }
+
+void motor_pid_control()
+{
+    while (a == 0 || f == 0)
+    {
+      read_ir();
+      /* float err = ((-4 * a) + (-2 * b) + (2 * e) + (4 * f))/4;
+    
+      // measure time;
+      tm = micros();
+      // calculate dt for use in integral and derivative terms
+      double dt = tm - prev_tm;
+      // calculate the integral of error
+      integral = integral + (err * dt);
+      // calculate the derivative of error
+      derivative = (err - prev_err) / dt;
+      double output = (kp * err) + (ki * integral) + (kd * derivative);
+      prev_err = err;
+      Serial.println(output);
+      /*if(output < 0)
+      {
+         
+      }*/
+    }
+        
+}
+
 
