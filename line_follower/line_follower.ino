@@ -43,17 +43,17 @@ void loop()
   Serial.println("f = ");
   Serial.print(f);
   */
-  if (a == 1 && b == 1 && c == 0 && d == 0 && e == 1 && f == 1)
+  if ((a == 1 && b == 1 && c == 0 && d == 0 && e == 1 && f == 1) || (a == 1 && b == 0 && c == 0 && d == 0 && e == 0 && f == 1))
   {
     forward(100);
     read_ir();
   }
-  else if (a == 0 && (b == 0 || b == 1) && c == 1 && d == 1 && e == 1 && f == 1)
+  else if ((a == 0 || b == 0) && d == 1 && e == 1 && f == 1)
   {
     left(100);
     read_ir();
   }
-  else if (a == 1 && b == 1 && c == 1 && d == 1 && (e == 0 || e == 1) && f == 0)
+  else if (a == 1 && b == 1 && d == 1 && (e == 0 || f == 0))
   {
     right(100);
     read_ir();
